@@ -1,0 +1,37 @@
+---
+- name: deploy and start apache httpd server in centos
+  hosts: centos
+  become: true
+  vars:
+    web_pkg: httpd
+    firewall_pkg: firewalld
+    web_service: httpd
+    firewall_service: firewalld
+    rule: http
+  tasks:
+    - name: required packages are installed and up to date
+      yum:
+        name:
+          - "{{ web_pkg }}"
+          - "{{ firewall_pkg }}"
+        state: latest
+    - name: the {{ firewall_service }} service is started and enabled
+      service:
+        name: "{{ firewall_service }}"
+        enabled: true
+        state: started
+    - name: The {{ web_service }} service is started and enabled
+      service:
+        name: "{{ web_service }}"
+        enabled: true
+        state: started
+    - name: web content is in place
+      copy:
+        content: <h1>Hello World</h1>
+        dest: /var/www/html/index.html
+    - name: The firewall port for {{ rule }} is opened
+      firewalld:
+        service: "{{ rule }}"
+        permanent: true
+        immediate: true
+        state: enabled

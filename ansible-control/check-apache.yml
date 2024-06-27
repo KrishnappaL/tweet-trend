@@ -1,0 +1,16 @@
+---
+- name: check if apache is working
+  hosts: centos
+  become: true
+  vars:
+    webserver_message: "APACHE HTTPD SERVER IS WORKING FINE"
+  tasks:
+    - name: start HTTPD
+      service:
+        name: httpd
+        state: started
+
+    - name: create index.html using jinja2
+      template:
+        src: index.j2
+        dest: /var/www/html/index.html
