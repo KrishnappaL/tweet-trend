@@ -1,8 +1,0 @@
----
-- name: server information summary
-  hosts: centos
-  tasks: 
-   - name: create server-info.yml using jinja2
-     templates:
-       src: info.j2
-       dest: /home/lakshmi/server-info.txt
